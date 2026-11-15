@@ -1,0 +1,15 @@
+# Archivos de CLion
+.idea/
+
+# Carpetas de compilación de CLion
+cmake-build-*/
+build/
+
+# Archivos compilados
+*.exe
+*.o
+*.obj
+*.out
+
+# Partidas guardadas (opcional, borra esta línea si quieres subir una de ejemplo)
+partida.txt
