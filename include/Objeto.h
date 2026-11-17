@@ -28,6 +28,10 @@ public:
         return descripcion;
     }
 
+    virtual bool puedeUsar(Jugador* jugador) {
+        return true;
+    }
+
     virtual void usar(Jugador* jugador) = 0;
 };
 
