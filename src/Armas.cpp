@@ -67,11 +67,11 @@ void Arma::usar(Jugador* jugador) {
 }
 
 PistolaBasica::PistolaBasica()
-    : Arma("Pistola Basica", "Arma inicial", 3, 1, 2, 3, 10) {
+    : Arma("Pistola Basica", "La que todos traen de inicio", 3, 1, 2, 3, 10) {
 }
 
 M4::M4()
-    : Arma("M4", "Rifle de rafagas", 6, 2, 2, 3, 10) {
+    : Arma("M4", "Ráfaga larga, gasta mucha municion", 6, 2, 2, 3, 10) {
 }
 
 Katana::Katana()
@@ -88,5 +88,5 @@ int Katana::disparosEsteAtaque() {
 }
 
 CanonDeGrapas::CanonDeGrapas()
-    : Arma("Canon de Grapas", "Lenta con mucho Daño", 1, 4, 5, 7, 15) {
+    : Arma("Canon de Grapas", "Lento pero pega fuerte", 1, 4, 5, 7, 15) {
 }

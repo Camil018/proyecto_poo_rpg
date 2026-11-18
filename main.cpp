@@ -1,68 +1,42 @@
 #include <iostream>
-#include "Jugador.h"
-#include "Pociones.h"
+#include "Enemigo.h"
+#include "Utilidades.h"
 using namespace std;
 
-void comprar(Pocion* pocion, Jugador* jugador) {
-    if (pocion->puedeComprar(jugador)) {
-        pocion->pagarCosto(jugador);
-        jugador->agregarObjeto(pocion);
-        cout << "Compraste " << pocion->getNombre() << "\n";
-    } else {
-        delete pocion;
+class EnemigoPrueba : public Enemigo {
+public:
+    EnemigoPrueba(int nivel) : Enemigo("Enemigo de prueba", 14, 1, nivel) {
     }
-}
 
-void usarObjeto(Jugador* jugador, int indice) {
-    Objeto* objeto = jugador->getObjeto(indice);
-    if (objeto->puedeUsar(jugador)) {
-        objeto->usar(jugador);
-        jugador->quitarObjeto(indice);
+    void atacar(Entidad* objetivo) {
+        cout << getNombre() << " golpea con " << getDanio() << " de dano\n";
+        objetivo->recibirDanio(getDanio());
     }
-}
+};
+
+class MunecoPrueba : public Entidad {
+public:
+    MunecoPrueba() : Entidad("Muneco", 20) {
+    }
+
+    void atacar(Entidad* objetivo) {
+    }
+};
 
 int main() {
-    Jugador roble;
+    Entidad* muneco = new MunecoPrueba();
 
-    cout << "Prueba 1: comprar Pocion de Vida (cuesta escudo maximo)\n";
-    roble.mostrarEstado();
-    comprar(new PocionVida(), &roble);
-    roble.mostrarEstado();
-    roble.mostrarInventario();
+    for (int nivel = 1; nivel <= 3; nivel++) {
+        Enemigo* e = new EnemigoPrueba(nivel);
+        cout << "Nivel " << e->getNivel() << ": vida " << e->getVida()
+             << ", dano " << e->getDanio() << "\n";
+        e->atacar(muneco);
+        cout << "Al muneco le quedan " << muneco->getVida() << " de vida\n\n";
+        delete e;
+    }
 
-    cout << "\nPrueba 2: usar Pocion de Vida (no pasa la vida maxima)\n";
-    roble.recibirDanio(5);
-    roble.mostrarEstado();
-    usarObjeto(&roble, 0);
-    roble.mostrarEstado();
-    cout << "Objetos en el inventario: " << roble.getCantidadObjetos() << "\n";
+    delete muneco;
 
-    cout << "\nPrueba 3: comprar y usar Pocion de Escudo\n";
-    comprar(new PocionEscudo(), &roble);
-    roble.mostrarEstado();
-    usarObjeto(&roble, 0);
-    roble.mostrarEstado();
-
-    cout << "\nPrueba 4: llegar al tope de escudo (6)\n";
-    comprar(new PocionEscudo(), &roble);
-    usarObjeto(&roble, 0);
-    roble.mostrarEstado();
-    comprar(new PocionEscudo(), &roble);
-    roble.mostrarEstado();
-
-    cout << "\nPrueba 5: minimos que bloquean la tienda\n";
-    Jugador otro;
-    otro.setVidaMaxima(1);
-    otro.setEscudoMaximo(0);
-    otro.mostrarEstado();
-    comprar(new PocionEscudo(), &otro);
-    comprar(new PocionVida(), &otro);
-    cout << "Objetos de otro: " << otro.getCantidadObjetos() << "\n";
-
-    cout << "\nPrueba 6: pocion de escudo que no se puede usar no se gasta\n";
-    roble.agregarObjeto(new PocionEscudo());
-    usarObjeto(&roble, 0);
-    cout << "Objetos en el inventario: " << roble.getCantidadObjetos() << "\n";
-
+    pausar();
     return 0;
 }
