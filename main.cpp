@@ -1,6 +1,5 @@
 #include <iostream>
-#include <vector>
-#include "Enemigos.h"
+#include "ProfesorRubrica.h"
 #include "Jugador.h"
 using namespace std;
 
@@ -14,51 +13,50 @@ public:
 };
 
 int main() {
-    cout << "Prueba 1: estadisticas por nivel\n";
-    for (int nivel = 1; nivel <= 3; nivel++) {
-        vector<Enemigo*> enemigos;
-        enemigos.push_back(new ZombiOjeras(nivel));
-        enemigos.push_back(new DronVigilante(nivel));
-        enemigos.push_back(new FotocopiadoraTanque(nivel));
+    cout << "Prueba 1: estado inicial del jefe\n";
+    ProfesorRubrica* jefe = new ProfesorRubrica();
+    cout << jefe->getNombre() << ": vida " << jefe->getVida() << "/"
+         << jefe->getVidaMaxima() << ", fase " << jefe->getFase() << "\n";
 
-        int cantidad = enemigos.size();
-        for (int i = 0; i < cantidad; i++) {
-            cout << enemigos[i]->getNombre() << " nivel " << enemigos[i]->getNivel()
-                 << ": vida " << enemigos[i]->getVida()
-                 << ", dano " << enemigos[i]->getDanio() << "\n";
-            delete enemigos[i];
-        }
-        cout << "\n";
-    }
-
-    cout << "Prueba 2: seis turnos de cada enemigo (nivel 1) contra un muneco\n";
-    vector<Enemigo*> enemigos;
-    enemigos.push_back(new ZombiOjeras(1));
-    enemigos.push_back(new DronVigilante(1));
-    enemigos.push_back(new FotocopiadoraTanque(1));
-
-    int cantidad = enemigos.size();
-    for (int i = 0; i < cantidad; i++) {
-        MunecoPrueba muneco;
-        cout << "\n" << enemigos[i]->getNombre() << "\n";
-        for (int turno = 1; turno <= 6; turno++) {
-            cout << "Turno " << turno << ":\n";
-            enemigos[i]->atacar(&muneco);
-        }
-        cout << "Al muneco le quedan " << muneco.getVida() << " de vida\n";
-        delete enemigos[i];
-    }
-
-    cout << "\nPrueba 3: fotocopiadora nivel 2 contra Roble (el escudo se gasta primero)\n";
-    Jugador roble;
-    Enemigo* fotocopiadora = new FotocopiadoraTanque(2);
-    roble.mostrarEstado();
-    for (int turno = 1; turno <= 3; turno++) {
+    cout << "\nPrueba 2: ocho turnos de fase 1\n";
+    MunecoPrueba muneco1;
+    for (int turno = 1; turno <= 8; turno++) {
         cout << "Turno " << turno << ":\n";
-        fotocopiadora->atacar(&roble);
+        jefe->atacar(&muneco1);
+    }
+    cout << "Al muneco le quedan " << muneco1.getVida() << " de vida\n";
+    delete jefe;
+
+    cout << "\nPrueba 3: cambio a la fase 2 cuando le quedan 40 o menos\n";
+    jefe = new ProfesorRubrica();
+    MunecoPrueba muneco2;
+    cout << "Turno 1:\n";
+    jefe->atacar(&muneco2);
+    jefe->setVida(41);
+    cout << "Vida del jefe: " << jefe->getVida() << ", fase " << jefe->getFase() << "\n";
+    cout << "Turno 2:\n";
+    jefe->atacar(&muneco2);
+    jefe->setVida(40);
+    cout << "Vida del jefe: " << jefe->getVida() << ", fase " << jefe->getFase() << "\n";
+    for (int turno = 3; turno <= 8; turno++) {
+        cout << "Turno " << turno << ":\n";
+        jefe->atacar(&muneco2);
+    }
+    cout << "Fase del jefe: " << jefe->getFase() << "\n";
+    cout << "Al muneco le quedan " << muneco2.getVida() << " de vida\n";
+    delete jefe;
+
+    cout << "\nPrueba 4: un ciclo de fase 1 contra Roble sin que Roble haga nada\n";
+    jefe = new ProfesorRubrica();
+    Jugador roble;
+    roble.mostrarEstado();
+    for (int turno = 1; turno <= 4; turno++) {
+        cout << "Turno " << turno << ":\n";
+        jefe->atacar(&roble);
         roble.mostrarEstado();
     }
-    delete fotocopiadora;
+    cout << "Roble sigue vivo (1 = si, 0 = no): " << roble.estaVivo() << "\n";
+    delete jefe;
 
     return 0;
 }
