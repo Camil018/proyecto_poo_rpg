@@ -1,5 +1,6 @@
 #include "Jugador.h"
 #include <iostream>
+#include <cstdlib>
 using namespace std;
 
 Jugador::Jugador() : Entidad("Roble", 6) {
@@ -10,6 +11,7 @@ Jugador::Jugador() : Entidad("Roble", 6) {
     armaElegida = 0;
     habilidadUsada = false;
     turnosRaices = 0;
+    salaActual = NULL;
     armas.push_back(new PistolaBasica());
 }
 
@@ -178,6 +180,14 @@ void Jugador::aplicarRaices(Entidad* enemigo) {
 void Jugador::recargarHabilidad() {
     habilidadUsada = false;
     turnosRaices = 0;
+}
+
+Habitacion* Jugador::getSalaActual() {
+    return salaActual;
+}
+
+void Jugador::setSalaActual(Habitacion* sala) {
+    salaActual = sala;
 }
 
 void Jugador::mostrarEstado() {

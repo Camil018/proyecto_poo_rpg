@@ -8,6 +8,8 @@
 #include "Armas.h"
 using namespace std;
 
+class Habitacion;
+
 class Jugador : public Entidad {
 private:
     int escudo;
@@ -19,6 +21,7 @@ private:
     vector<Objeto*> inventario;
     bool habilidadUsada;
     int turnosRaices;
+    Habitacion* salaActual;
 
 public:
     Jugador();
@@ -52,6 +55,9 @@ public:
     bool raicesActivas();
     void aplicarRaices(Entidad* enemigo);
     void recargarHabilidad();
+
+    Habitacion* getSalaActual();
+    void setSalaActual(Habitacion* sala);
 
     void mostrarEstado();
     void mostrarArmas();
