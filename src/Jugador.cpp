@@ -177,6 +177,10 @@ void Jugador::aplicarRaices(Entidad* enemigo) {
          << " y le hacen 1 de dano (quedan " << turnosRaices << " turnos)\n";
 }
 
+void Jugador::quitarRaices() {
+    turnosRaices = 0;
+}
+
 void Jugador::recargarHabilidad() {
     habilidadUsada = false;
     turnosRaices = 0;

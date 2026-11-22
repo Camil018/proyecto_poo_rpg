@@ -15,7 +15,7 @@ private:
     void turnoDelJugador();
     void turnoDelEnemigo();
     void menuAtacar();
-    void menuObjeto();
+    bool menuObjeto();
 
 public:
     Combate(Jugador* jugador, Enemigo* enemigo);

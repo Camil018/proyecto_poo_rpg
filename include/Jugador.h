@@ -54,6 +54,7 @@ public:
     void usarHabilidad();
     bool raicesActivas();
     void aplicarRaices(Entidad* enemigo);
+    void quitarRaices();
     void recargarHabilidad();
 
     Habitacion* getSalaActual();

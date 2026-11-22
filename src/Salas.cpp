@@ -2,8 +2,8 @@
 #include "Jugador.h"
 #include "Armas.h"
 #include "Pociones.h"
-#include "Utilidades.h"
 #include "Combate.h"
+#include "Utilidades.h"
 #include <iostream>
 #include <cstdlib>
 using namespace std;
@@ -55,14 +55,20 @@ void SalaEnemigos::entrar(Jugador* jugador) {
         return;
     }
 
-    cout << "Enemigos en la sala:\n";
-    int cantidad = enemigos.size();
-    for (int i = 0; i < cantidad; i++) {
-        cout << (i + 1) << ") " << enemigos[i]->getNombre()
-             << " (vida " << enemigos[i]->getVida() << ")\n";
+    cout << "Hay " << enemigos.size() << " enemigos en la sala, se pelea de a uno\n";
+
+    while (!estaLimpia() && jugador->estaVivo()) {
+        Combate combate(jugador, enemigos[0]);
+        bool gano = combate.pelear();
+        if (gano) {
+            quitarEnemigo(0);
+        }
     }
 
-    
+    if (estaLimpia()) {
+        jugador->recargarHabilidad();
+        cout << "\nLa sala quedo limpia\n";
+    }
 }
 
 SalaCofre::SalaCofre(string nombre, string descripcion) : Habitacion(nombre, descripcion) {
@@ -189,7 +195,8 @@ bool SalaJefe::getVencido() {
 void SalaJefe::entrar(Jugador* jugador) {
     llegar(jugador);
     cout << jefe->getNombre() << " te espera con el boligrafo rojo en la mano\n";
-    cout << "Vida del jefe: " << jefe->getVida() << "/" << jefe->getVidaMaxima() << "\n";
+    pausar();
 
-    // el combate se conecta aqui en el commit de Combate
+    Combate combate(jugador, jefe);
+    combate.pelear();
 }

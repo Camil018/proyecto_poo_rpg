@@ -31,6 +31,8 @@ bool Combate::pelear() {
         turnoDelEnemigo();
     }
 
+    jugador->quitarRaices();
+
     if (jugador->estaVivo()) {
         cout << "\nDerrotaste a " << enemigo->getNombre() << "\n";
         return true;
@@ -63,8 +65,7 @@ void Combate::turnoDelJugador() {
         } else {
             if (jugador->getCantidadObjetos() == 0) {
                 cout << "No tienes objetos\n";
-            } else {
-                menuObjeto();
+            } else if (menuObjeto()) {
                 turnoGastado = true;
             }
         }
@@ -78,12 +79,22 @@ void Combate::menuAtacar() {
     jugador->atacar(enemigo);
 }
 
-void Combate::menuObjeto() {
+bool Combate::menuObjeto() {
     jugador->mostrarInventario();
-    int opcion = leerOpcion("Cual usas? ", 1, jugador->getCantidadObjetos());
+    cout << "0) Volver\n";
+    int opcion = leerOpcion("Cual usas? ", 0, jugador->getCantidadObjetos());
+    if (opcion == 0) {
+        return false;
+    }
+
     Objeto* objeto = jugador->getObjeto(opcion - 1);
+    if (!objeto->puedeUsar(jugador)) {
+        return false;
+    }
+
     objeto->usar(jugador);
     jugador->quitarObjeto(opcion - 1);
+    return true;
 }
 
 void Combate::turnoDelEnemigo() {
