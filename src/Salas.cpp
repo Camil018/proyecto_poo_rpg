@@ -3,6 +3,7 @@
 #include "Armas.h"
 #include "Pociones.h"
 #include "Utilidades.h"
+#include "Combate.h"
 #include <iostream>
 #include <cstdlib>
 using namespace std;
@@ -61,7 +62,7 @@ void SalaEnemigos::entrar(Jugador* jugador) {
              << " (vida " << enemigos[i]->getVida() << ")\n";
     }
 
-    // el combate se conecta aqui en el commit de Combate
+    
 }
 
 SalaCofre::SalaCofre(string nombre, string descripcion) : Habitacion(nombre, descripcion) {
