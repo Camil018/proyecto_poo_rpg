@@ -1,5 +1,6 @@
 #include "Nivel.h"
 #include "Enemigos.h"
+#include "Partida.h"
 #include "Utilidades.h"
 #include <iostream>
 #include <cstdlib>
@@ -120,6 +121,24 @@ SalaJefe* Nivel::getSalaJefe() {
     return salaJefe;
 }
 
+int Nivel::getIndiceSala(Habitacion* sala) {
+    int cantidad = habitaciones.size();
+    for (int i = 0; i < cantidad; i++) {
+        if (habitaciones[i] == sala) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+Habitacion* Nivel::getHabitacion(int indice) {
+    int cantidad = habitaciones.size();
+    if (indice < 0 || indice >= cantidad) {
+        return NULL;
+    }
+    return habitaciones[indice];
+}
+
 bool Nivel::terminado() {
     if (portal != NULL) {
         return portal->getCruzado();
@@ -143,17 +162,50 @@ void Nivel::moverse(Jugador* jugador) {
 
     cout << "\n";
     actual->mostrarSalidas();
-    int opcion = leerOpcion("A donde quieres ir? ", 1, actual->getCantidadSalidas());
-    Habitacion* destino = actual->getSalida(opcion - 1);
+    cout << "0) Guardar partida\n";
+    int opcion = leerOpcion("A donde quieres ir? ", 0, actual->getCantidadSalidas());
 
+    if (opcion == 0) {
+        Partida partida;
+        if (partida.guardar(jugador, this)) {
+            cout << "Partida guardada\n";
+        } else {
+            cout << "No se pudo guardar la partida\n";
+        }
+        return;
+    }
+
+    Habitacion* destino = actual->getSalida(opcion - 1);
     if (destino->puedeEntrar()) {
         destino->entrar(jugador);
     }
 }
 
-void Nivel::recorrer(Jugador* jugador) {
-    empezar(jugador);
+void Nivel::avanzar(Jugador* jugador) {
     while (!terminado() && jugador->estaVivo()) {
         moverse(jugador);
     }
+}
+
+void Nivel::recorrer(Jugador* jugador) {
+    empezar(jugador);
+    avanzar(jugador);
+}
+
+void Nivel::reanudar(Jugador* jugador, int indiceSala) {
+    Habitacion* sala = getHabitacion(indiceSala);
+
+    if (sala == NULL) {
+        empezar(jugador);
+    } else if (sala == portal) {
+        cout << "\nNivel " << numero << "\n";
+        sala->entrar(jugador);
+    } else {
+        cout << "\nNivel " << numero << "\n";
+        jugador->setSalaActual(sala);
+        cout << "Estas en: " << sala->getNombre() << "\n";
+        cout << sala->getDescripcion() << "\n";
+    }
+
+    avanzar(jugador);
 }

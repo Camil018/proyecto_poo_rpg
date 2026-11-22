@@ -30,6 +30,15 @@ private:
 
 public:
     SalaCofre(string nombre, string descripcion);
+
+    bool getAbierto() {
+        return abierto;
+    }
+
+    void setAbierto(bool valor) {
+        abierto = valor;
+    }
+
     void entrar(Jugador* jugador);
 };
 

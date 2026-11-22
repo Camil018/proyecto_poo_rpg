@@ -34,10 +34,15 @@ public:
     SalaPortal* getPortal();
     SalaJefe* getSalaJefe();
 
+    int getIndiceSala(Habitacion* sala);
+    Habitacion* getHabitacion(int indice);
+
     bool terminado();
     void empezar(Jugador* jugador);
     void moverse(Jugador* jugador);
+    void avanzar(Jugador* jugador);
     void recorrer(Jugador* jugador);
+    void reanudar(Jugador* jugador, int indiceSala);
 };
 
 #endif

@@ -3,6 +3,7 @@
 
 #include "Jugador.h"
 #include "Nivel.h"
+#include "Partida.h"
 using namespace std;
 
 class Juego {
@@ -12,7 +13,8 @@ private:
     int nivelActual;
 
     void nuevaPartida();
-    void jugarDesde(int nivelInicial);
+    void cargarPartida();
+    void jugarDesde(int nivelInicial, Partida* partida);
     void pantallaDerrota();
     void pantallaVictoria();
 

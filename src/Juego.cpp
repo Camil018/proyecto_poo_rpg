@@ -31,7 +31,7 @@ void Juego::iniciar() {
         if (opcion == 1) {
             nuevaPartida();
         } else if (opcion == 2) {
-            cout << "\nTodavia no se puede cargar, falta hacer el guardado\n";
+            cargarPartida();
         } else {
             salir = true;
         }
@@ -51,13 +51,37 @@ void Juego::nuevaPartida() {
     cout << "y llegar al Salon del Examen Final, donde te espera el profesor Aurelio Rubrica.\n";
     pausar();
 
-    jugarDesde(1);
+    jugarDesde(1, nullptr);
 }
 
-void Juego::jugarDesde(int nivelInicial) {
+void Juego::cargarPartida() {
+    Partida partida;
+    if (!partida.leer()) {
+        cout << "\nNo hay una partida guardada que se pueda cargar\n";
+        return;
+    }
+
+    if (jugador != nullptr) {
+        delete jugador;
+    }
+    jugador = new Jugador();
+    partida.aplicarAlJugador(jugador);
+
+    cout << "\nPartida cargada. Sigues en el nivel " << partida.getNivel() << "\n";
+    jugarDesde(partida.getNivel(), &partida);
+}
+
+void Juego::jugarDesde(int nivelInicial, Partida* partida) {
     for (nivelActual = nivelInicial; nivelActual <= 4; nivelActual++) {
         nivel = new Nivel(nivelActual);
-        nivel->recorrer(jugador);
+
+        if (partida != nullptr) {
+            partida->aplicarAlNivel(nivel);
+            nivel->reanudar(jugador, partida->getSala());
+            partida = nullptr;
+        } else {
+            nivel->recorrer(jugador);
+        }
 
         bool jefeVencido = false;
         if (nivelActual == 4 && jugador->estaVivo()) {
